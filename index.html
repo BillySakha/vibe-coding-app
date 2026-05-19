@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengumpulan Karya - Vibe Coding Challenge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0a0f;
+        --surface: #13131a;
+        --surface2: #1c1c26;
+        --border: #2a2a3a;
+        --accent: #7c6bff;
+        --accent2: #ff6b9d;
+        --accent3: #6bffca;
+        --text: #f0f0f8;
+        --muted: #6b6b8a;
+        --mono: 'Space Mono', monospace;
+        --sans: 'DM Sans', sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--sans);
+        min-height: 100vh;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+      }
+      .shell {
+        position: relative;
+        z-index: 1;
+        max-width: 780px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem;
+      }
+      header {
+        padding: 2rem 0 1.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
+      .logo {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      h1 span {
+        color: var(--accent);
+      }
+      .tagline {
+        font-size: 14px;
+        color: var(--muted);
+        margin-top: 0.4rem;
+        font-weight: 300;
+      }
+      .tabs {
+        display: flex;
+        gap: 0;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 3px;
+        background: var(--surface);
+        margin-bottom: 1.75rem;
+        overflow-x: auto;
+      }
+      .tab-btn {
+        flex: 1;
+        min-width: 100px;
+        padding: 8px 14px;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 500;
+        border: none;
+        background: none;
+        color: var(--muted);
+        cursor: pointer;
+        border-radius: 7px;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .tab-btn.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .tab-btn:hover:not(.active) {
+        color: var(--text);
+        background: var(--surface2);
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .card-title {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+      .field {
+        margin-bottom: 1rem;
+      }
+      .field label {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+      .field input,
+      .field textarea {
+        width: 100%;
+        padding: 10px 12px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        color: var(--text);
+        font-family: var(--sans);
+        transition: border 0.2s;
+        outline: none;
+      }
+      .field input:focus,
+      .field textarea:focus {
+        border-color: var(--accent);
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        background: var(--surface2);
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--text);
+        cursor: pointer;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 18px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        background: var(--surface2);
+        color: var(--text);
+        font-family: var(--sans);
+        transition: all 0.15s;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .btn.primary:hover {
+        opacity: 0.85;
+        color: #fff;
+      }
+      .btn.full {
+        width: 100%;
+        justify-content: center;
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .alert {
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        margin-bottom: 1rem;
+        font-family: var(--mono);
+      }
+      .alert.ok {
+        background: #6bffca15;
+        border: 1px solid var(--accent3);
+        color: var(--accent3);
+      }
+      .alert.err {
+        background: #ff444415;
+        border: 1px solid #ff4444;
+        color: #ff7777;
+      }
+      .rubrik-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .rubrik-label {
+        flex: 1;
+        font-size: 14px;
+      }
+      .rubrik-sub {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .rubrik-poin {
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--accent);
+        width: 50px;
+        text-align: right;
+      }
+      .loader {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #7c6bff40;
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: middle;
+        margin-right: 4px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 500px) {
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="logo">Sistem Pengumpulan Karya Peserta</div>
+        <h1>Vibe <span>Coding</span> Challenge</h1>
+        <p class="tagline">Silakan lengkapi formulir di bawah ini dengan data yang valid.</p>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('form', this)">Formulir Pengumpulan</button>
+        <button class="tab-btn" onclick="switchTab('panduan', this)">Panduan Teknis</button>
+      </div>
+
+      <div id="page-form" class="page active">
+        <div id="form-alert"></div>
+        <div class="card">
+          <div class="card-title">Data Identitas Peserta</div>
+          <div class="field"><label>Nama Lengkap</label><input id="f-nama" placeholder="Masukkan nama lengkap Anda" /></div>
+          <div class="field"><label>Nomor Induk Mahasiswa (NIM)</label><input id="f-nim" placeholder="Contoh: 253040001" /></div>
+          <div class="field">
+            <label>Perangkat AI yang Digunakan (Dapat memilih lebih dari satu)</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" name="f-ai" value="ChatGPT" /> ChatGPT</label>
+              <label class="checkbox-label"><input type="checkbox" name="f-ai" value="Claude" /> Claude</label>
+              <label class="checkbox-label"><input type="checkbox" name="f-ai" value="Gemini" /> Gemini</label>
+              <label class="checkbox-label"><input type="checkbox" name="f-ai" value="Cursor / IDE Copilot" /> Cursor / IDE Integration (Copilot)</label>
+              <label class="checkbox-label"><input type="checkbox" name="f-ai" value="Lainnya" id="cb-ai-lainnya" onchange="toggleAiLainnya()" /> Lainnya (Sebutkan secara spesifik)</label>
+            </div>
+            <input id="f-ai-lainnya" placeholder="Ketik nama perangkat AI lainnya di sini..." style="margin-top: 8px; display: none" />
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Detail Aplikasi Minimum Viable Product (MVP)</div>
+          <div class="field"><label>Nama Aplikasi</label><input id="f-appname" placeholder="Contoh: Sistem Manajemen Tugas Terpusat" /></div>
+          <div class="field">
+            <label>Deskripsi Fungsionalitas Aplikasi</label>
+            <textarea id="f-desc" placeholder="Jelaskan secara ringkas masalah apa yang diselesaikan oleh aplikasi ini..."></textarea>
+          </div>
+          <div class="field">
+            <label>Tautan Deploy Publik (Vercel / Netlify / Layanan Hosting Lainnya)</label>
+            <input id="f-deploy" placeholder="https://..." />
+          </div>
+          <div class="field">
+            <label>Tautan Log AI (Share Link untuk Web AI ATAU Tautan Google Drive .txt untuk Pengguna IDE)</label>
+            <input id="f-ailink" placeholder="Masukkan tautan log validasi" />
+          </div>
+          <div class="field">
+            <label>Instruksi Pengujian Juri <span style="color: var(--muted)">(Opsional)</span></label>
+            <textarea id="f-cara" placeholder="1. Buka tautan deploy&#10;2. Masukkan data dummy..."></textarea>
+          </div>
+        </div>
+        <button class="btn primary full" onclick="submitPeserta()">Kirim Data Karya →</button>
+      </div>
+
+      <div id="page-panduan" class="page">
+        <div class="card">
+          <div class="card-title">Parameter Penilaian Juri</div>
+          <div class="rubrik-row">
+            <div class="rubrik-label">
+              Fungsionalitas (MVP)
+              <div class="rubrik-sub">Aplikasi berjalan tanpa major bug & fitur utama berfungsi</div>
+            </div>
+            <div class="rubrik-poin">45</div>
+          </div>
+          <div class="rubrik-row">
+            <div class="rubrik-label">
+              Kreativitas Solusi
+              <div class="rubrik-sub">Keunikan ide untuk memecahkan masalah mahasiswa</div>
+            </div>
+            <div class="rubrik-poin">25</div>
+          </div>
+          <div class="rubrik-row">
+            <div class="rubrik-label">
+              Efektivitas Prompting AI
+              <div class="rubrik-sub">Kualitas instruksi dan alur debugging berdasarkan log validasi</div>
+            </div>
+            <div class="rubrik-poin">20</div>
+          </div>
+          <div class="rubrik-row" style="border-bottom: 2px dashed var(--border)">
+            <div class="rubrik-label" style="color: var(--accent3)">
+              Poin Bonus (Keamanan Kode)
+              <div class="rubrik-sub">Penerapan env, no hardcoded credentials, & validasi input</div>
+            </div>
+            <div class="rubrik-poin" style="color: var(--accent3)">10</div>
+          </div>
+          <div class="rubrik-row" style="border: none; margin-top: 5px">
+            <div class="rubrik-label" style="font-weight: 600">Skor Maksimal Total</div>
+            <div class="rubrik-poin" style="color: var(--accent3)">100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+      import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAAcZudcr-G7LLFF6eJ__2HSIwj9dOrCNU',
+        authDomain: 'penilaian-vibe-coding.firebaseapp.com',
+        databaseURL: 'https://penilaian-vibe-coding-default-rtdb.asia-southeast1.firebasedatabase.app',
+        projectId: 'penilaian-vibe-coding',
+        storageBucket: 'penilaian-vibe-coding.firebasestorage.app',
+        messagingSenderId: '138677485489',
+        appId: '1:138677485489:web:223467c00f322f8a3f4790',
+        measurementId: 'G-GJRK5YGZGX',
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const COL = 'participants';
+
+      function showAlert(id, msg, type = 'ok') {
+        const el = document.getElementById(id);
+        el.innerHTML = `<div class="alert ${type}">${msg}</div>`;
+        if (type !== 'err') setTimeout(() => (el.innerHTML = ''), 4000);
+      }
+
+      function switchTab(name, btn) {
+        document.querySelectorAll('.tab-btn').forEach((t) => t.classList.remove('active'));
+        document.querySelectorAll('.page').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('page-' + name).classList.add('active');
+      }
+      window.switchTab = switchTab;
+
+      function toggleAiLainnya() {
+        const cb = document.getElementById('cb-ai-lainnya');
+        const input = document.getElementById('f-ai-lainnya');
+        input.style.display = cb.checked ? 'block' : 'none';
+        if (!cb.checked) input.value = '';
+      }
+      window.toggleAiLainnya = toggleAiLainnya;
+
+      async function submitPeserta() {
+        const nama = document.getElementById('f-nama').value.trim();
+        const nim = document.getElementById('f-nim').value.trim();
+        const appname = document.getElementById('f-appname').value.trim();
+        const desc = document.getElementById('f-desc').value.trim();
+        const deploy = document.getElementById('f-deploy').value.trim();
+        const ailink = document.getElementById('f-ailink').value.trim();
+        const cara = document.getElementById('f-cara').value.trim();
+
+        const aiCheckboxes = document.querySelectorAll('input[name="f-ai"]:checked');
+        let aiSelected = Array.from(aiCheckboxes).map((cb) => cb.value);
+
+        const cbLainnya = document.getElementById('cb-ai-lainnya');
+        const aiLainnyaValue = document.getElementById('f-ai-lainnya').value.trim();
+
+        if (cbLainnya.checked && aiLainnyaValue) {
+          aiSelected = aiSelected.map((val) => (val === 'Lainnya' ? `Lainnya (${aiLainnyaValue})` : val));
+        } else if (cbLainnya.checked && !aiLainnyaValue) {
+          showAlert('form-alert', 'Mohon spesifikasikan nama perangkat AI lainnya pada kolom teks yang tersedia.', 'err');
+          return;
+        }
+
+        const ai = aiSelected.join(', ');
+
+        if (!nama || !nim || !ai || !appname || !desc || !deploy || !ailink) {
+          showAlert('form-alert', 'Mohon lengkapi seluruh field wajib (kecuali instruksi pengujian).', 'err');
+          return;
+        }
+
+        const btn = document.querySelector('#page-form .btn.primary');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span>Menyimpan Data...';
+
+        try {
+          const snap = await getDocs(collection(db, COL));
+          const existing = snap.docs.find((d) => d.data().nim === nim);
+          if (existing) {
+            showAlert('form-alert', 'Peserta dengan NIM ini telah melakukan pengumpulan karya sebelumnya.', 'err');
+            btn.disabled = false;
+            btn.innerHTML = 'Kirim Data Karya →';
+            return;
+          }
+
+          await addDoc(collection(db, COL), {
+            nama,
+            nim,
+            ai,
+            appname,
+            desc,
+            deploy,
+            ailink,
+            cara,
+            submittedAt: new Date().toLocaleTimeString('id-ID'),
+            scored: false,
+            skorFungsi: null,
+            skorKreatif: null,
+            skorAI: null,
+            skorBonus: null,
+          });
+
+          showAlert('form-alert', `Berhasil! Karya "${appname}" telah tercatat ke dalam sistem penilaian.`);
+          ['f-nama', 'f-nim', 'f-appname', 'f-desc', 'f-deploy', 'f-ailink', 'f-cara', 'f-ai-lainnya'].forEach((id) => (document.getElementById(id).value = ''));
+          document.querySelectorAll('input[name="f-ai"]').forEach((cb) => (cb.checked = false));
+          document.getElementById('f-ai-lainnya').style.display = 'none';
+        } catch (e) {
+          showAlert('form-alert', 'Gagal menyimpan data. Silakan periksa koneksi internet Anda.', 'err');
+          console.error(e);
+        }
+        btn.disabled = false;
+        btn.innerHTML = 'Kirim Data Karya →';
+      }
+      window.submitPeserta = submitPeserta;
+    </script>
+  </body>
+</html>
